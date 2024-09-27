@@ -25,3 +25,16 @@ fieldset span {
   bottom: 3px;
   font-size: small;
 }
+
+input:required {
+  border: 1px solid black;
+}
+
+input.invalid {
+  background-color: rgb(250, 236, 238);
+  border: 1px solid red;
+}
+
+input.valid {
+  background-color: rgb(235, 255, 235);
+}

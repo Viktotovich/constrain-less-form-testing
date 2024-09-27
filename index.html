@@ -21,6 +21,7 @@
               required
               minlength="5"
               maxlength="30"
+              placeholder="example@email.com"
             />
             <span class="email-validity" aria-live="polite"></span>
           </div>
@@ -32,16 +33,29 @@
               name="country"
               minlength="4"
               maxlength="56"
+              placeholder="United States of America"
+              required
             />
             <span class="country-validity" aria-live="polite"></span>
           </div>
           <div class="form-container">
             <label for="country-dropdown">Select your country code:</label>
-            <select name="country-dropdown" id="country-dropdown"></select>
+            <select
+              name="country-dropdown"
+              id="country-dropdown"
+              required
+            ></select>
           </div>
           <div class="form-container">
             <label for="zip-code">Please enter your zip-code</label>
-            <input id="zip-code" name="zip-code" minlength="2" maxlength="10" />
+            <input
+              id="zip-code"
+              name="zip-code"
+              minlength="2"
+              maxlength="10"
+              placeholder="73099"
+              required
+            />
             <span class="zip-code-validity" aria-live="polite"></span>
           </div>
           <button type="button" id="submit-form">submit</button>
