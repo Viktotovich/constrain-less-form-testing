@@ -193,10 +193,50 @@ const countryList = {
   Zimbabwe: "ZW",
 };
 
+const pwdControls = {
+  receivePwd: function (pwd) {
+    let lengthCheck = pwdControls.validateLength(pwd);
+    let condition = {};
+
+    condition.digitCheck = pwdControls.conditions.containDigit.test(pwd);
+
+    condition.caseCheck = pwdControls.conditions.containOneLowerCase.test(pwd);
+
+    condition.spCharCheck = pwdControls.conditions.containOneSpecial.test(pwd);
+
+    return { lengthCheck, condition };
+  },
+  conditions: {
+    containDigit: /(?=.*\d)/,
+    containOneLowerCase: /(?=.*[a-z])/,
+    containOneSpecial: /(?=.*[\W])/,
+  },
+  validateLength: function (pwd) {
+    if (pwd.length < 8) {
+      let message = [
+        false,
+        `Your password is ${pwd.length} characters, it must be atleast 8 characters.`,
+      ];
+      return message;
+    } else if (pwd.length > 20) {
+      let message = [
+        false,
+        `Your password is ${pwd.length} characters long, it must be maximum 20 character.`,
+      ];
+      return message;
+    } else {
+      let message = [true, ""];
+      return message;
+    }
+  },
+};
+
 const formController = {
   emailElement: document.querySelector("#email"),
   countryElement: document.querySelector("#country"),
   zipcodeElement: document.querySelector("#zip-code"),
+  passwordElement: document.querySelector("#password"),
+  confirmPasswordElement: document.querySelector("#confirm-password"),
   submitButton: document.querySelector("#submit-form"),
   initiate: function () {
     formController.emailElement.addEventListener(
@@ -210,6 +250,14 @@ const formController = {
     formController.zipcodeElement.addEventListener(
       "input",
       formController.checkZipCodeValidity
+    );
+    formController.passwordElement.addEventListener(
+      "input",
+      formController.checkPasswordValidity
+    );
+    formController.confirmPasswordElement.addEventListener(
+      "input",
+      formController.checkConfirmPasswordValidity
     );
     formController.submitButton.addEventListener(
       "click",
@@ -289,11 +337,65 @@ const formController = {
       formController.displayCorrect(formController.zipcodeElement);
     }
   },
+  passwordRegex: /((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{6,20})/,
+  checkPasswordValidity: function () {
+    const results = pwdControls.receivePwd(
+      formController.passwordElement.value
+    );
+
+    if (results.lengthCheck[0] === false) {
+      formController.displayError(
+        formController.passwordElement,
+        results.lengthCheck[1]
+      );
+    } else if (results.condition.digitCheck === false) {
+      formController.displayError(
+        formController.passwordElement,
+        "Your password must contain atleast one digit (0-9)"
+      );
+    } else if (results.condition.caseCheck === false) {
+      formController.displayError(
+        formController.passwordElement,
+        "Your password must contain atleast one lower case character"
+      );
+    } else if (results.condition.spCharCheck === false) {
+      formController.displayError(
+        formController.passwordElement,
+        "Your password must contain atleast one special character (<. ?!)"
+      );
+    } else {
+      formController.displayCorrect(formController.passwordElement);
+      return true;
+    }
+  },
+  checkConfirmPasswordValidity: function () {
+    if (
+      !(
+        formController.passwordElement.value ===
+        formController.confirmPasswordElement.value
+      )
+    ) {
+      formController.displayError(
+        formController.confirmPasswordElement,
+        "The password you have set does not match the password you had entered"
+      );
+    } else if (!(formController.checkPasswordValidity() === true)) {
+      formController.displayError(
+        formController.confirmPasswordElement,
+        "You need to make sure that the original password is in the correct format"
+      );
+    } else {
+      formController.displayCorrect(formController.confirmPasswordElement);
+      return true;
+    }
+  },
   checkAll: function (e) {
     if (
       formController.checkCountryValidity &&
       formController.checkZipCodeValidity &&
-      formController.checkEmailValidity
+      formController.checkEmailValidity &&
+      formController.checkPasswordValidity &&
+      formController.checkConfirmPasswordValidity
     ) {
       alert("Thank you for submitting the form");
     } else {
