@@ -391,11 +391,11 @@ const formController = {
   },
   checkAll: function (e) {
     if (
-      formController.checkCountryValidity &&
-      formController.checkZipCodeValidity &&
-      formController.checkEmailValidity &&
-      formController.checkPasswordValidity &&
-      formController.checkConfirmPasswordValidity
+      formController.checkCountryValidity() &&
+      formController.checkZipCodeValidity() &&
+      formController.checkEmailValidity() &&
+      formController.checkPasswordValidity() &&
+      formController.checkConfirmPasswordValidity()
     ) {
       alert("Thank you for submitting the form");
     } else {
